@@ -1,0 +1,28 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} Air Pollution Monitor</title>
+<html>
+
+<h1>Search for city</h1>
+<form method="POST">
+    <label for="city">Enter city name:</label>
+    <input type="text" id="city" name="city" />
+    <br />
+    <input type="submit" value="Search" />
+</form>
+
+{% if city_data %}
+<p>City: {{ city_name }}</p>
+<p>Coordinates: lon: {{ lon }} lat: {{ lat }} </p>
+
+
+<p>Concentration of components:</p>
+<ul>
+    {% for key, value in components %}
+    <li><strong>{{ key }}</strong>: {{ value }} μg/m3</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+</head>
+
+</html>

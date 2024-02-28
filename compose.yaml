@@ -1,0 +1,15 @@
+version: '3'
+
+name: az-air-log
+services:
+  flask:
+    build:
+      context: ./app
+    image: jasmar2/az-air-log:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    environment:
+      - API_KEY = ${API_KEY}
+    

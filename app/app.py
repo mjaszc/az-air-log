@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import requests
 from dotenv import load_dotenv
 import os
@@ -32,7 +32,15 @@ def get_air_pollution_data(lat, lon):
 def index():
     if request.method == "POST":
         name = request.form["city"]
-        city_data = get_city_data(name, limit=1)
+        return redirect(url_for("city", city_name=name))
+    else:
+        return render_template("index.html")
+
+
+@app.route("/city/<city_name>", methods=["GET"])
+def city(city_name):
+    city_data = get_city_data(city_name, limit=1)
+    if city_data:
         city_name = city_data[0]["name"]
         lat = city_data[0]["lat"]
         lon = city_data[0]["lon"]
@@ -50,7 +58,7 @@ def index():
             components=components_items,
         )
     else:
-        return render_template("index.html")
+        return "City not found!"
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ terraform/.terraform/
 .python_packages
 .venv2
 .vscode
-
+lib64
 
 # From Azure Functions gitignore
 
@@ -37,6 +37,7 @@ project.lock.json
 .secrets
 appsettings.json
 local.settings.json
+terraform/microsoft.gpg
 
 node_modules
 dist

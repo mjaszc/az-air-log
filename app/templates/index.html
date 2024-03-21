@@ -24,20 +24,44 @@
 {% endif %}
 
 
-<!-- <br />
+<br />
 <br />
 <h3>Stay informed about air quality!</h3>
 <p>Sign up to receive email notifications when air pollution levels exceed a certain threshold in the cities you choose.
 </p>
-<form action="/subscribe" method="post">
-    <label for="email">Enter your email address:</label>
+
+<form id="subscriptionForm">
+    <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
-    <br>
-    <label for="city">Enter city name:</label>
-    <input type="text" id="city" name="city" placeholder="City name (e.g., New York, London)">
-    <br>
-    <button type="submit">Subscribe</button>
-</form> -->
+    <label for="citySubscription">City:</label>
+    <input type="text" id="citySubscription" name="city" required>
+    <input type="submit" value="Submit">
+</form>
+
+<div id="subscriptionStatus"></div>
+
+<script>
+    // Modify that function
+    document.getElementById('subscriptionForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from being submitted normally
+
+        let email = document.getElementById('email').value;
+        let city = document.getElementById('citySubscription').value;
+
+        var azureFunctionUrl = 'https://airlog-linux-function-app.azurewebsites.net/api/airlog_http_trigger?city_name=' + city;
+
+        fetch(azureFunctionUrl, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    });
+</script>
 
 </head>
 

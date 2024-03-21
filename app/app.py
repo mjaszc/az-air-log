@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, jsonify
 import requests
 from dotenv import load_dotenv
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 
@@ -32,15 +34,7 @@ def get_air_pollution_data(lat, lon):
 def index():
     if request.method == "POST":
         name = request.form["city"]
-        return redirect(url_for("city", city_name=name))
-    else:
-        return render_template("index.html")
-
-
-@app.route("/city/<city_name>", methods=["GET"])
-def city(city_name):
-    city_data = get_city_data(city_name, limit=1)
-    if city_data:
+        city_data = get_city_data(name, limit=1)
         city_name = city_data[0]["name"]
         lat = city_data[0]["lat"]
         lon = city_data[0]["lon"]
@@ -58,7 +52,17 @@ def city(city_name):
             components=components_items,
         )
     else:
-        return "City not found!"
+        return render_template("index.html")
+
+
+@app.route("/subscribe", methods=["POST"])
+def subscribe():
+    city_name = request.args.get("city_name")
+
+    if not city_name:
+        return jsonify({"error": "City name is required."}), 400
+
+    return jsonify({"message": f"Subscription to {city_name} successful!"})
 
 
 if __name__ == "__main__":
